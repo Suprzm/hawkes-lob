@@ -132,14 +132,17 @@ result = fit_hawkes(events, T=500.0)
 
 ## Results on synthetic data
 
+## Results on synthetic data
+
 Simulation with true parameters (μ=2.0, α=0.5, β=1.0, T=2000):
 
 | Parameter | True | Estimated | Error |
 |---|---|---|---|
 | μ | 2.000 | 1.837 | 8.2% |
-| α | 0.500 | 0.348 | 30.4% |
-| β | 1.000 | 0.681 | 31.9% |
+| α | 0.500 | 0.348 | 30.4% — known identifiability issue |
+| β | 1.000 | 0.681 | 31.9% — known identifiability issue |
 | **η = α/β** | **0.500** | **0.512** | **2.3%** |
+| **E[λ] = μ/(1−η)** | **4.000** | **3.876** | **3.1%** |
 
 The branching ratio is the key quantity for LOB analysis — it measures the average number of child events per parent event. η close to 1 signals an unstable, self-reinforcing market (flash crash risk).
 
@@ -159,7 +162,12 @@ The branching ratio is the key quantity for LOB analysis — it measures the ave
 
 ## Tests
 
-13 unit tests covering simulation correctness, intensity properties, stationarity constraints and MLE recovery:
+13 unit tests covering simulation correctness, intensity properties, 
+stationarity constraints, MLE recovery and implied mean intensity validation.
+
+Note: individual α/β identifiability is a known MLE limitation on Hawkes 
+processes — the likelihood surface is flat along the η=α/β=const manifold. 
+Tests cover branching ratio and implied mean intensity E[λ] instead.
 
 ```bash
 make test
