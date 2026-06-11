@@ -1,5 +1,7 @@
 # hawkes-lob
 
+[![CI](https://github.com/Suprzm/hawkes-lob/actions/workflows/ci.yml/badge.svg)](https://github.com/Suprzm/hawkes-lob/actions/workflows/ci.yml)
+
 **Limit Order Book simulator using Hawkes processes** — calibrated on real crypto market data.
 
 Hawkes processes capture the self-exciting nature of order flow: a trade triggers more trades, cancellations cluster around price moves, and activity bursts are followed by calm periods. This project models these dynamics and validates them against BTC/USDT market microstructure data from Binance.
