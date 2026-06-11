@@ -134,8 +134,6 @@ result = fit_hawkes(events, T=500.0)
 
 ## Results on synthetic data
 
-## Results on synthetic data
-
 Simulation with true parameters (μ=2.0, α=0.5, β=1.0, T=2000):
 
 | Parameter | True | Estimated | Error |
@@ -147,6 +145,30 @@ Simulation with true parameters (μ=2.0, α=0.5, β=1.0, T=2000):
 | **E[λ] = μ/(1−η)** | **4.000** | **3.876** | **3.1%** |
 
 The branching ratio is the key quantity for LOB analysis — it measures the average number of child events per parent event. η close to 1 signals an unstable, self-reinforcing market (flash crash risk).
+
+---
+
+## Results on real ETH/BTC data (Binance)
+
+Calibrated on 1000 trades over 114 minutes:
+
+| Parameter | Value | Interpretation |
+|---|---|---|
+| μ | 0.0812 trades/s | ~1 exogenous trade every 12s |
+| α | 25.46 | large jump size per trade |
+| β | 57.19 | excitation halves in ~12ms |
+| **η** | **0.445** | each trade generates 0.44 child trades |
+| E[λ] | 0.1463 trades/s | model vs empirical error: **0.1%** |
+
+Goodness of fit: model-implied mean intensity matches empirical 
+rate with 0.1% error — confirming stationarity of ETH/BTC 
+over the 114-minute window.
+
+**Why ETH/BTC and not BTC/USDT?**  
+BTC/USDT on Binance processes ~16 trades/second — the stationary  
+Hawkes model is misspecified on such high-frequency data  
+(88% intensity error observed). ETH/BTC at 0.15 trades/second  
+satisfies the stationarity assumption required for reliable MLE.
 
 ---
 
@@ -164,42 +186,89 @@ The branching ratio is the key quantity for LOB analysis — it measures the ave
 
 ## Tests
 
-13 unit tests covering simulation correctness, intensity properties, 
-stationarity constraints, MLE recovery and implied mean intensity validation.
+## Tests
 
-Note: individual α/β identifiability is a known MLE limitation on Hawkes 
-processes — the likelihood surface is flat along the η=α/β=const manifold. 
-Tests cover branching ratio and implied mean intensity E[λ] instead.
+18 unit tests covering the full pipeline — from process simulation
+to strategy execution:
 
 ```bash
 make test
 ```
 
 ```
-tests/test_hawkes.py::test_poisson_returns_list              PASSED
-tests/test_hawkes.py::test_poisson_events_in_range           PASSED
-tests/test_hawkes.py::test_poisson_events_sorted             PASSED
-tests/test_hawkes.py::test_poisson_mean_close_to_lambda      PASSED
-tests/test_hawkes.py::test_hawkes_intensity_base             PASSED
+tests/test_hawkes.py::test_poisson_returns_list                    PASSED
+tests/test_hawkes.py::test_poisson_events_in_range                 PASSED
+tests/test_hawkes.py::test_poisson_events_sorted                   PASSED
+tests/test_hawkes.py::test_poisson_mean_close_to_lambda            PASSED
+tests/test_hawkes.py::test_hawkes_intensity_base                   PASSED
 tests/test_hawkes.py::test_hawkes_intensity_increases_after_event  PASSED
-tests/test_hawkes.py::test_hawkes_intensity_decays           PASSED
-tests/test_hawkes.py::test_hawkes_branching_ratio            PASSED
-tests/test_hawkes.py::test_hawkes_events_in_range            PASSED
-tests/test_hawkes.py::test_hawkes_more_events_than_poisson   PASSED
-tests/test_hawkes.py::test_mle_recovers_parameters           PASSED
-tests/test_hawkes.py::test_mle_branching_ratio_valid         PASSED
-tests/test_hawkes.py::test_mle_returns_expected_keys         PASSED
+tests/test_hawkes.py::test_hawkes_intensity_decays                 PASSED
+tests/test_hawkes.py::test_hawkes_branching_ratio                  PASSED
+tests/test_hawkes.py::test_hawkes_events_in_range                  PASSED
+tests/test_hawkes.py::test_hawkes_more_events_than_poisson         PASSED
+tests/test_hawkes.py::test_mle_recovers_parameters                 PASSED
+tests/test_hawkes.py::test_mle_branching_ratio_valid               PASSED
+tests/test_hawkes.py::test_mle_returns_expected_keys               PASSED
+tests/test_simulator.py::test_simulation_returns_states            PASSED
+tests/test_simulator.py::test_simulation_price_positive            PASSED
+tests/test_simulator.py::test_simulation_times_sorted              PASSED
+tests/test_simulator.py::test_strategy_runs                        PASSED
+tests/test_simulator.py::test_strategy_metrics_keys                PASSED
 ```
+
+**Hawkes process (10)** — simulation correctness, intensity properties
+(base level, post-event jump, exponential decay), stationarity constraint
+(η < 1 required for convergence), clustering validation (Hawkes generates
+more events than equivalent Poisson), and MLE parameter recovery on
+synthetic data with 2.3% branching ratio error.
+
+**LOB Simulator (3)** — market state generation, price positivity
+throughout simulation, chronological ordering of events.
+
+**Strategy (2)** — end-to-end execution of Avellaneda-Stoikov on a
+simulated LOB, and strategy metrics output validation.
+
+Note: MLE tests cover branching ratio η and implied mean intensity
+E[λ] = μ/(1−η) rather than individual α/β — known identifiability
+limitation documented in Known Limitations.
 
 ---
 
-## Roadmap
+## Backtesting — Avellaneda-Stoikov on simulated ETH/BTC LOB
 
-- [ ] Fit on real BTC/USDT tick data from Binance
-- [ ] Multivariate Hawkes — cross-excitation between bid and ask sides
-- [ ] Full LOB simulator driven by calibrated Hawkes intensities
-- [ ] Avellaneda-Stoikov market-making agent running on simulated LOB
-- [ ] Backtesting framework with P&L, spread capture and inventory metrics
+Simulation: T=3600s, 554 trades, calibrated Hawkes parameters.
+
+| Metric | Value |
+|---|---|
+| Final P&L | 0.0130 BTC |
+| Realized P&L | 0.0399 BTC |
+| Unrealized P&L | −0.0270 BTC |
+| Max drawdown | 0.0002 BTC |
+| Sharpe ratio | 3.34 |
+| Fill rate | 23.6% |
+| Fills (buy/sell) | 65 / 66 |
+| Max inventory | 3 ETH |
+
+The realized/unrealized decomposition confirms the core  
+market-making trade-off: spread capture (+0.040 BTC) partially  
+offset by inventory risk (−0.027 BTC), yielding net +0.013 BTC.
+
+**Known limitations:**
+- Simplified fill model: no adverse selection
+- Independent buy/sell Hawkes processes (no cross-excitation)  
+- Constant spread assumption in the LOB simulator
+
+---
+
+## Extensions
+
+Directions for future development:
+
+- [ ] Multivariate Hawkes — cross-excitation between buy and sell sides
+- [ ] Empirical k calibration from real order book data
+- [ ] Adverse selection in the fill model
+- [ ] Regime-switching Hawkes for non-stationary markets
+- [ ] Spectral estimation (Bacry & Muzy 2014) for stable α/β recovery
 
 ---
 
