@@ -186,8 +186,6 @@ satisfies the stationarity assumption required for reliable MLE.
 
 ## Tests
 
-## Tests
-
 18 unit tests covering the full pipeline — from process simulation
 to strategy execution:
 
