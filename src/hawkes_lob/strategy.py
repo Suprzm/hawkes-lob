@@ -188,7 +188,6 @@ def strategy_metrics(state):
     max_drawdown = (np.maximum.accumulate(pnl) - pnl).max()
     max_inventory = np.abs(inventory).max()
     pnl_std      = pnl.std()
-    sharpe       = (final_pnl / pnl_std) if pnl_std > 0 else 0.0
     n_fills     = state.n_fills_buy + state.n_fills_sell
     fill_rate   = n_fills / len(state.pnl) * 100
 
@@ -200,7 +199,6 @@ def strategy_metrics(state):
         'min_pnl':        min_pnl,
         'max_drawdown':     max_drawdown,
         'max_inventory':  max_inventory,
-        'sharpe':         sharpe,
         'n_steps':        len(pnl),
         'n_fills':        n_fills,           
         'n_fills_buy':    state.n_fills_buy, 

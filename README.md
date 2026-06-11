@@ -240,14 +240,16 @@ Simulation: T=3600s, 554 trades, calibrated Hawkes parameters.
 
 | Metric | Value |
 |---|---|
-| Final P&L | 0.0130 BTC |
-| Realized P&L | 0.0399 BTC |
-| Unrealized P&L | −0.0270 BTC |
+| Final P&L | +0.0130 BTC |
+| Realized P&L (spread capture) | +0.0399 BTC |
+| Inventory P&L | −0.0270 BTC |
 | Max drawdown | 0.0002 BTC |
-| Sharpe ratio | 3.34 |
 | Fill rate | 23.6% |
-| Fills (buy/sell) | 65 / 66 |
+| Fills (buy / sell) | 65 / 66 |
 | Max inventory | 3 ETH |
+
+*Sharpe ratio is not reported — inapplicable to event-driven 
+market-making with irregular inter-arrival times.*
 
 The realized/unrealized decomposition confirms the core  
 market-making trade-off: spread capture (+0.040 BTC) partially  
