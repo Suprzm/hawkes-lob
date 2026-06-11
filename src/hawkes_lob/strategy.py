@@ -26,8 +26,6 @@ class StrategyState:
     n_fills_buy:    int = 0
     n_fills_sell:   int = 0
 
-# Et dans la boucle après chaque fill
-
 def avellaneda_stoikov(simulation,
                        gamma = 0.1,
                        sigma = 0.001,
