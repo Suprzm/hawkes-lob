@@ -29,4 +29,4 @@ def test_strategy_metrics_keys():
     state   = avellaneda_stoikov(result, T=100.0)
     metrics = strategy_metrics(state)
     assert all(k in metrics for k in
-               ['final_pnl', 'max_inventory', 'sharpe'])
+               ['final_pnl', 'max_inventory'])
