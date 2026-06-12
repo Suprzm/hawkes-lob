@@ -287,4 +287,5 @@ Directions for future development:
 **Marvin Kameni** — [marvinkmn@gmail.com](mailto:marvinkmn@gmail.com)
 
 *Centrale Lyon — General Engineering, Mathematics & Decision*
+
 *Previously: Algorithmic Trader @ Flowdesk (Singapore)*
