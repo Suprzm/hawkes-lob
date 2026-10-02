@@ -290,4 +290,4 @@ Directions for future development:
 
 *Previously: Algorithmic Trader @ Flowdesk (Singapore)*
 
-*Previously:Centrale Lyon — General Engineering, Mathematics & Decision*
+*Previously: Centrale Lyon — General Engineering, Mathematics & Decision*
