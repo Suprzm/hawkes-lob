@@ -4,7 +4,7 @@
 
 **Limit Order Book simulator using Hawkes processes** — calibrated on real crypto market data.
 
-Hawkes processes capture the self-exciting nature of order flow: a trade triggers more trades, cancellations cluster around price moves, and activity bursts are followed by calm periods. This project models these dynamics and validates them against BTC/USDT market microstructure data from Binance.
+Hawkes processes capture the self-exciting nature of order flow: a trade triggers more trades, cancellations cluster around price moves, and activity bursts are followed by calm periods. This project models these dynamics and validates them against BTC/ETH market microstructure data from Binance.
 
 ---
 
