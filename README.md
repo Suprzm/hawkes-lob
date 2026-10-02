@@ -286,6 +286,8 @@ Directions for future development:
 
 **Marvin Kameni** — [marvinkmn@gmail.com](mailto:marvinkmn@gmail.com)
 
-*Centrale Lyon — General Engineering, Mathematics & Decision*
+*Université Paris 1 Panthéon-Sorbonne — Applied Mathematics, Quantitative Finance*
 
 *Previously: Algorithmic Trader @ Flowdesk (Singapore)*
+
+*Previously:Centrale Lyon — General Engineering, Mathematics & Decision*
